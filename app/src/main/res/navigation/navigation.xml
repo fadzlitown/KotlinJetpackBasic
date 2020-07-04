@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/listFragment">
+
+    <fragment
+        android:id="@+id/listFragment"
+        android:name="com.inovasiti.kucingapp.view.ListFragment"
+        android:label="ListFragment" >
+        <action
+            android:id="@+id/action_listFragment_to_catFragment"
+            app:destination="@id/catFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/catFragment"
+        android:name="com.inovasiti.kucingapp.view.CatFragment"
+        android:label="fragment_cat"
+        tools:layout="@layout/fragment_cat" >
+        <action
+            android:id="@+id/action_catFragment_to_listFragment"
+            app:destination="@id/listFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim" />
+        <argument
+            android:name="catValue"
+            app:argType="integer"
+            android:defaultValue="5"/>
+    </fragment>
+</navigation>
