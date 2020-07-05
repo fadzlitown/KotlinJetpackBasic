@@ -10,7 +10,7 @@
         android:name="com.inovasiti.kucingapp.view.ListFragment"
         android:label="ListFragment" >
         <action
-            android:id="@+id/action_listFragment_to_catFragment"
+            android:id="@+id/goToCatScreen"
             app:destination="@id/catFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim" />
@@ -21,13 +21,12 @@
         android:label="fragment_cat"
         tools:layout="@layout/fragment_cat" >
         <action
-            android:id="@+id/action_catFragment_to_listFragment"
+            android:id="@+id/goToCatList"
             app:destination="@id/listFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim" />
         <argument
             android:name="catValue"
-            app:argType="integer"
-            android:defaultValue="5"/>
+            app:argType="integer"/>
     </fragment>
 </navigation>

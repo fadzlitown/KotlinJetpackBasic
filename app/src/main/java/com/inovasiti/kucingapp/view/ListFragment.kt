@@ -7,9 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.ListFragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.Navigation
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.inovasiti.kucingapp.R
 import com.inovasiti.kucingapp.databinding.FragmentListBinding
+import com.inovasiti.kucingapp.viewmodel.CatListViewModel
 import kotlinx.android.synthetic.main.fragment_list.*
 
 /**
@@ -19,6 +23,8 @@ import kotlinx.android.synthetic.main.fragment_list.*
  */
 class ListFragment : Fragment() {
      private lateinit var dataBinding: FragmentListBinding
+    private lateinit var vm : CatListViewModel
+    private val mAdapter = CatListAdapter(arrayListOf())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,12 +41,45 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        floatingActionButton.setOnClickListener {
-            //ListFragmentDirections class came from gradle plugin: "androidx.navigation"
-            // actionListFragmentToCatFragment came from navigation "arrow" graph
-            val action = ListFragmentDirections.actionListFragmentToCatFragment();
-            Navigation.findNavController(it).navigate(action)
-        }
+        vm = ViewModelProviders.of(this).get(CatListViewModel::class.java)
+        vm.refresh()
 
+        rv.apply {
+            layoutManager = LinearLayoutManager(view.context)
+            //mcm rv adapter.setAdapter(mAdapter)
+            adapter = mAdapter
+        }
+        observeViewModel()
+    }
+
+    fun observeViewModel(){
+        //viewLifecycleOwner : Get a {@link LifecycleOwner} that represents the {@link #getView() Fragment's View
+        vm.cats.observe(viewLifecycleOwner, Observer { cats ->
+            // cats!=null
+                cats?.let {
+                    //when the cats are coming , show RV & update the new cats
+                    rv.visibility = View.VISIBLE
+                    mAdapter.updateCatList(cats)
+                }
+        })
+
+        vm.catLoadError.observe(viewLifecycleOwner, Observer { isError ->
+            //isError check nullable types
+            isError?.let {
+                error.visibility = if(it) View.VISIBLE else View.GONE
+            }
+        })
+
+        vm.loading.observe(viewLifecycleOwner, Observer { isLoading ->
+            //isLoading check nullable types
+            isLoading?.let {
+                //if it true or false
+                progressBar.visibility = if (it) View.VISIBLE else View.GONE
+                if(it){
+                    error.visibility = View.GONE
+                    rv.visibility = View.GONE
+                }
+            }
+        })
     }
 }

@@ -1,14 +1,16 @@
 package com.inovasiti.kucingapp.view
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.Navigation
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.inovasiti.kucingapp.R
 import com.inovasiti.kucingapp.databinding.FragmentCatBinding
+import com.inovasiti.kucingapp.viewmodel.CatDetailViewModel
 import kotlinx.android.synthetic.main.fragment_cat.*
 
 /**
@@ -17,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_cat.*
  * create an instance of this fragment.
  */
 class CatFragment : Fragment() {
-
+    private lateinit var vm: CatDetailViewModel
     private var catUID = 0
     private lateinit var dataBinding: FragmentCatBinding
 
@@ -31,6 +33,8 @@ class CatFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         dataBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_cat, container, false)
+        vm = ViewModelProviders.of(this).get(CatDetailViewModel::class.java)
+        vm.addCat()
         return dataBinding.root
     }
 
@@ -40,14 +44,18 @@ class CatFragment : Fragment() {
         //if arg != null
         arguments?.let {
             catUID = CatFragmentArgs.fromBundle(it).catValue
-            textView2.text = "Args "+catUID.toString()
         }
 
-        floatingActionButton2.setOnClickListener {
-            //ListFragmentDirections class came from gradle plugin: "androidx.navigation"
-            // actionListFragmentToCatFragment came from navigation "arrow" graph
-            val action = CatFragmentDirections.actionCatFragmentToListFragment();
-            Navigation.findNavController(it).navigate(action)
-        }
+        vm.catLiveData.observe(viewLifecycleOwner, Observer { cat ->
+            cat?.let {
+                catName.text = cat.catSiam
+                catPurpose.text = cat.bredFor
+                catLifespan.text = cat.lifeSpan
+                catTemperament.text = cat.temperament
+                val id = requireContext().resources
+                    .getIdentifier(cat.imgUrl, "drawable", requireContext().packageName)
+                catImage.setImageResource(id)
+            }
+        })
     }
 }
