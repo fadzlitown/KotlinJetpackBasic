@@ -44,6 +44,8 @@ class CatFragment : Fragment() {
         }
 
         floatingActionButton2.setOnClickListener {
+            //ListFragmentDirections class came from gradle plugin: "androidx.navigation"
+            // actionListFragmentToCatFragment came from navigation "arrow" graph
             val action = CatFragmentDirections.actionCatFragmentToListFragment();
             Navigation.findNavController(it).navigate(action)
         }
