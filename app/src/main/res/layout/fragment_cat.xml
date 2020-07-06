@@ -13,7 +13,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:src="@drawable/ic_launcher_background"
             android:scaleType="fitCenter"
             android:minHeight="200dp"/>
 

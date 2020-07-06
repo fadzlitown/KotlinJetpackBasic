@@ -42,13 +42,23 @@ class ListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         vm = ViewModelProviders.of(this).get(CatListViewModel::class.java)
-        vm.refresh()
+//        vm.refresh()
+        vm.fetchFromRemote()
 
         rv.apply {
             layoutManager = LinearLayoutManager(view.context)
             //mcm rv adapter.setAdapter(mAdapter)
             adapter = mAdapter
         }
+
+        refresh.setOnRefreshListener {
+            rv.visibility = View.GONE
+            error.visibility = View.GONE
+            progressBar.visibility = View.VISIBLE
+            vm.fetchFromRemote()
+            refresh.isRefreshing = false
+        }
+
         observeViewModel()
     }
 

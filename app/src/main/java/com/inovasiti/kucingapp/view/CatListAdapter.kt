@@ -9,6 +9,8 @@ import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
 import com.inovasiti.kucingapp.R
+import com.inovasiti.kucingapp.getProgressDrawable
+import com.inovasiti.kucingapp.loadImage
 import com.inovasiti.kucingapp.model.CatSiam
 import kotlinx.android.synthetic.main.item_cat.view.*
 
@@ -38,6 +40,7 @@ class CatListAdapter(val catsList: ArrayList<CatSiam>) : RecyclerView.Adapter<Ca
             val bundle = ListFragmentDirections.goToCatScreen(catsList[position].siamId?.toInt()!!)
             Navigation.findNavController(it).navigate(bundle)
         }
+        holder.v.imageView.loadImage(catsList[position].imgUrl, getProgressDrawable(holder.v.context))
     };
 
     class CatViewHolder(var v: View) : RecyclerView.ViewHolder(v)
