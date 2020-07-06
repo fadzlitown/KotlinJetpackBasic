@@ -3,11 +3,8 @@ package com.inovasiti.kucingapp.view
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.navigation.NavigationView
 import com.inovasiti.kucingapp.R
 import com.inovasiti.kucingapp.getProgressDrawable
 import com.inovasiti.kucingapp.loadImage
@@ -33,11 +30,11 @@ class CatListAdapter(val catsList: ArrayList<CatSiam>) : RecyclerView.Adapter<Ca
     override fun getItemCount() = catsList.size
 
     override fun onBindViewHolder(holder: CatViewHolder, position: Int) {
-        holder.v.name.text = catsList[position].catSiam
+        holder.v.name.text = catsList[position].catName
         holder.v.lifespan.text = catsList[position].lifeSpan
         holder.v.setOnClickListener {
 //            val bundle = ListFragmentDirections.goToCatScreen(catsList[position])
-            val bundle = ListFragmentDirections.goToCatScreen(catsList[position].siamId?.toInt()!!)
+            val bundle = ListFragmentDirections.goToCatScreen(catsList[position].uuid.toInt())
             Navigation.findNavController(it).navigate(bundle)
         }
         holder.v.imageView.loadImage(catsList[position].imgUrl, getProgressDrawable(holder.v.context))

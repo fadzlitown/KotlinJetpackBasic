@@ -10,6 +10,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.inovasiti.kucingapp.R
 import com.inovasiti.kucingapp.databinding.FragmentCatBinding
+import com.inovasiti.kucingapp.getProgressDrawable
+import com.inovasiti.kucingapp.loadImage
 import com.inovasiti.kucingapp.viewmodel.CatDetailViewModel
 import kotlinx.android.synthetic.main.fragment_cat.*
 
@@ -20,7 +22,7 @@ import kotlinx.android.synthetic.main.fragment_cat.*
  */
 class CatFragment : Fragment() {
     private lateinit var vm: CatDetailViewModel
-    private var catUID = 0
+    private var catUID = 0L
     private lateinit var dataBinding: FragmentCatBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +36,6 @@ class CatFragment : Fragment() {
         // Inflate the layout for this fragment
         dataBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_cat, container, false)
         vm = ViewModelProviders.of(this).get(CatDetailViewModel::class.java)
-        vm.addCat()
         return dataBinding.root
     }
 
@@ -43,18 +44,21 @@ class CatFragment : Fragment() {
 
         //if arg != null
         arguments?.let {
-            catUID = CatFragmentArgs.fromBundle(it).catValue
+            catUID = CatFragmentArgs.fromBundle(it).catValue.toLong()
+            vm.fetchFromDBByUid(catUID)
         }
 
         vm.catLiveData.observe(viewLifecycleOwner, Observer { cat ->
             cat?.let {
-                catName.text = cat.catSiam
+                catName.text = cat.catName
                 catPurpose.text = cat.bredFor
                 catLifespan.text = cat.lifeSpan
                 catTemperament.text = cat.temperament
-                val id = requireContext().resources
-                    .getIdentifier(cat.imgUrl, "drawable", requireContext().packageName)
-                catImage.setImageResource(id)
+
+                //if context not null
+                view.context?.let{
+                    catImage.loadImage(cat.imgUrl, getProgressDrawable(view.context))
+                }
             }
         })
     }

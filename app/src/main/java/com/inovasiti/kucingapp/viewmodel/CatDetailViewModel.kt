@@ -1,10 +1,13 @@
 package com.inovasiti.kucingapp.viewmodel
 
+import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.inovasiti.kucingapp.model.CatDatabase
 import com.inovasiti.kucingapp.model.CatSiam
+import kotlinx.coroutines.launch
 
-class CatDetailViewModel : ViewModel() {
+class CatDetailViewModel(app: Application) : BaseViewModel(app) {
     val catLiveData = MutableLiveData<CatSiam>()
 
     fun addCat(){
@@ -12,4 +15,14 @@ class CatDetailViewModel : ViewModel() {
             "Bred siam","asdadas","R.drawable.ic_launcher_background")
         catLiveData.value = cat1
     }
+
+    //retrieve the cat fro db
+     fun fetchFromDBByUid(uuid : Long){
+        launch {
+            val cat = CatDatabase(getApplication()).catDao().getCat(uuid);
+            catLiveData.value = cat
+        }
+    }
+
+
 }
