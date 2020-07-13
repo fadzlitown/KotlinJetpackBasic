@@ -1,23 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <data>
+        <variable
+            name="cat"
+            type="com.inovasiti.kucingapp.model.CatSiam" />
+
+        <variable
+            name="listener"
+            type="com.inovasiti.kucingapp.view.CatBindingListener" />
+    </data>
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
+        android:onClick="@{listener::onClickListner}"
         android:layout_height="125dp">
 
         <TextView
             android:id="@+id/catId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            />
+            android:text="@{String.valueOf(cat.uuid)}"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
+            android:imageUrl="@{cat.imgUrl}"
             android:padding="4dp"/>
 
         <LinearLayout
@@ -32,12 +43,14 @@
                 android:id="@+id/name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@{cat.catName}"
                 style="@style/Title" />
 
             <TextView
                 android:id="@+id/lifespan"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@{cat.lifeSpan}"
                 style="@style/Text" />
 
         </LinearLayout>

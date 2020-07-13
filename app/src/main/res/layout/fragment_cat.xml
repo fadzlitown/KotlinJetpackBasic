@@ -3,9 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="cat"
+            type="com.inovasiti.kucingapp.model.CatSiam" />
+        
+        <variable
+            name="palette"
+            type="com.inovasiti.kucingapp.model.CatPalette" />
+    </data>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@{palette.color}"
         tools:context=".view.DetailFragment">
 
         <ImageView
@@ -13,44 +25,49 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:scaleType="fitCenter"
-            android:minHeight="200dp"/>
+            android:imageUrl="@{cat.imgUrl}"
+            android:minHeight="200dp"
+            android:scaleType="fitCenter" />
 
         <TextView
             android:id="@+id/catName"
+            style="@style/Title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/catImage"
-            style="@style/Title"
             android:layout_centerHorizontal="true"
-            android:layout_margin="4dp"/>
+            android:layout_margin="4dp"
+            android:text="@{cat.catName}" />
 
         <TextView
             android:id="@+id/catPurpose"
+            style="@style/Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/catName"
-            style="@style/Text"
             android:layout_centerHorizontal="true"
-            android:layout_margin="4dp"/>
+            android:layout_margin="4dp"
+            android:text="@{cat.bredFor}" />
 
         <TextView
             android:id="@+id/catTemperament"
+            style="@style/Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/catPurpose"
-            style="@style/Text"
             android:layout_centerHorizontal="true"
-            android:layout_margin="4dp"/>
+            android:layout_margin="4dp"
+            android:text="@{cat.temperament}" />
 
         <TextView
             android:id="@+id/catLifespan"
+            style="@style/Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/catTemperament"
-            style="@style/Text"
             android:layout_centerHorizontal="true"
-            android:layout_margin="4dp"/>
+            android:layout_margin="4dp"
+            android:text="@{cat.lifeSpan}" />
 
     </RelativeLayout>
 </layout>

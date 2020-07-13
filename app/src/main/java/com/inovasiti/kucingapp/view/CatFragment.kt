@@ -1,5 +1,7 @@
 package com.inovasiti.kucingapp.view
 
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,10 +10,15 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.palette.graphics.Palette
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.inovasiti.kucingapp.R
 import com.inovasiti.kucingapp.databinding.FragmentCatBinding
 import com.inovasiti.kucingapp.getProgressDrawable
 import com.inovasiti.kucingapp.loadImage
+import com.inovasiti.kucingapp.model.CatPalette
 import com.inovasiti.kucingapp.viewmodel.CatDetailViewModel
 import kotlinx.android.synthetic.main.fragment_cat.*
 
@@ -35,7 +42,6 @@ class CatFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         dataBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_cat, container, false)
-        vm = ViewModelProviders.of(this).get(CatDetailViewModel::class.java)
         return dataBinding.root
     }
 
@@ -45,21 +51,38 @@ class CatFragment : Fragment() {
         //if arg != null
         arguments?.let {
             catUID = CatFragmentArgs.fromBundle(it).catValue.toLong()
-            vm.fetchFromDBByUid(catUID)
         }
-
+        vm = ViewModelProviders.of(this).get(CatDetailViewModel::class.java)
+        vm.fetchFromDBByUid(catUID)
         vm.catLiveData.observe(viewLifecycleOwner, Observer { cat ->
             cat?.let {
-                catName.text = cat.catName
-                catPurpose.text = cat.bredFor
-                catLifespan.text = cat.lifeSpan
-                catTemperament.text = cat.temperament
+                dataBinding.cat = cat
 
-                //if context not null
-                view.context?.let{
-                    catImage.loadImage(cat.imgUrl, getProgressDrawable(view.context))
+                it.imgUrl?.let {
+                    setupBackgroundColor(it)
                 }
             }
         })
+    }
+
+    private fun setupBackgroundColor(url: String){
+        Glide
+            .with(this)
+            .asBitmap()
+            .load(url)
+            .into(object : CustomTarget<Bitmap>(){
+                override fun onLoadCleared(placeholder: Drawable?) {}
+
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    Palette.from(resource)
+                        .generate { palette ->
+                            // if getRgb null, then use 0 as default value
+                            val intColor = palette?.lightVibrantSwatch?.rgb ?: 0
+                            val myPal = CatPalette(intColor)
+                            dataBinding.palette = myPal
+                        }
+                }
+
+            })
     }
 }

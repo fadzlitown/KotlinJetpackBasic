@@ -43,3 +43,5 @@ data class CatSiam(
     var uuid : Long = 0
 
 }
+
+data class CatPalette(var color: Int)
